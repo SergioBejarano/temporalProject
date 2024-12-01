@@ -6,9 +6,9 @@ on:
       - main 
 
 env:
-  AZURE_WEBAPP_NAME: 'userManagementBibliosoft'  
+  AZURE_WEBAPP_NAME: 'usersbibliosoft'  
   AZURE_WEBAPP_PACKAGE_PATH: 'target/*.jar'  
-  JAVA_VERSION: '17' 
+  JAVA_VERSION: '21' 
 
 jobs:
   build:

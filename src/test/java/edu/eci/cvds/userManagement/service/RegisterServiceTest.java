@@ -53,8 +53,10 @@ public class RegisterServiceTest {
     public void testRegisterStudentSuccess() {
         Student student = new Student("15667", "John Doe", "56786754", "fdgh", null, "Father");
         when(userRepository.save(any())).thenReturn(student);
+        when(studentRepository.save(any())).thenReturn(student);
         Optional<Student> result = registerService.registerStudent(student);
-        assertFalse(result.isPresent());
+        assertTrue(result.isPresent());
+        assertEquals(student, result.get());
         verify(studentRepository, times(1)).save(any());
     }
 
