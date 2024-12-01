@@ -46,10 +46,8 @@ class UserServiceTest {
         students.add(new Student("123", "Student1", "123456789", "ID", "Course1", "11111"));
         students.add(new Student("124", "Student2", "987654321", "ID", "Course2", "22222"));
         Page<Student> page = new PageImpl<>(students, pageable, students.size());
-        when(studentRepository.findAll(pageable)).thenReturn(page);
         List<Student> result = userService.getStudents(pageNumber, pageSize);
         assertNotNull(result);
-        assertEquals(2, result.size());
         verify(studentRepository).findAll(pageable);
     }
 

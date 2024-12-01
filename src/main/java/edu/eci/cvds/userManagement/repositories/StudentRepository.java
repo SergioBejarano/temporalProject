@@ -52,13 +52,52 @@ public class StudentRepository {
     /**
      * Retrieves a paginated list of students.
      *
-     * @param offset The offset for pagination.
-     * @param limit  The limit for pagination.
+     * @param pageable The Pageable object containing pagination information.
      * @return A list of students.
      */
-    public List<Student> findAll(int offset, int limit) {
+    public List<Student> findAll(Pageable pageable) {
+        int offset = pageable.getPageNumber() * pageable.getPageSize();
+        int limit = pageable.getPageSize();
+
         String sql = "SELECT * FROM students LIMIT ? OFFSET ?";
+
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Student.class), limit, offset);
+    }
+
+    /**
+     * Checks if a student exists by their ID.
+     *
+     * @param studentId The ID of the student.
+     * @return true if the student exists, false otherwise.
+     */
+    public boolean existsById(String studentId) {
+        String sql = "SELECT COUNT(*) FROM students WHERE id = ?";
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, studentId);
+
+        return count != null && count > 0;
+    }
+
+    /**
+     * Updates the student's active status.
+     *
+     * @param studentId The ID of the student.
+     * @param status The new status to set (true for active, false for inactive).
+     */
+    public void updateStudentStatus(String studentId, boolean status) {
+        String sql = "UPDATE students SET active = ? WHERE id = ?";
+        jdbcTemplate.update(sql, status, studentId);
+    }
+
+    /**
+     * Retrieves the total count of students.
+     *
+     * @return The total number of students.
+     */
+    public long count() {
+        String sql = "SELECT COUNT(*) FROM students";
+
+        return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
     /**

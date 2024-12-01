@@ -35,7 +35,7 @@ public class UserService {
      */
     public List<Student> getStudents(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        return studentRepository.findAll(pageable).getContent();
+        return studentRepository.findAll(pageable);
     }
 
     /**
@@ -112,11 +112,20 @@ public class UserService {
         return responsibleRepository.count();
     }
 
+    /**
+     * Updates the status (active/inactive) of a student by their ID.
+     *
+     * @param studentId The ID of the student.
+     * @param status The new status to set (true for active, false for inactive).
+     */
+    @Transactional
     public void updateStudentStatus(String studentId, boolean status) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        Student student = studentRepository.findById(studentId);
+        if (student == null) {
+            throw new EntityNotFoundException("Student not found");
+        }
         student.setActive(status);
-        studentRepository.save(student);
+        studentRepository.updateStudentStatus(studentId, status);
     }
 
 }

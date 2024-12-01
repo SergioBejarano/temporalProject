@@ -30,7 +30,7 @@ public class RegisterService {
     }
 
     public Optional<Student> registerStudent(Student student) {
-        return Optional.of(studentRepository.save(student));
+        return studentRepository.save(student);
     }
 
     public Optional<Responsible> registerResponsible(Responsible responsible) {
