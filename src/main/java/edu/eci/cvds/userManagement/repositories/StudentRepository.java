@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -24,6 +25,29 @@ public class StudentRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+
+
+    /**
+     * Saves a student to the database. If the student exists, it is updated, otherwise a new student is inserted.
+     *
+     * @param student The student object to be saved.
+     * @return An Optional containing the saved student, or empty if not successful.
+     */
+    public Optional<Student> save(Student student) {
+        String checkQuery = "SELECT COUNT(*) FROM students WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(checkQuery, Integer.class, student.getId());
+
+        if (count > 0) {
+            String updateQuery = "UPDATE students SET name = ?, course_name = ? WHERE id = ?";
+            jdbcTemplate.update(updateQuery, student.getName(), student.getCourseName(), student.getId());
+        } else {
+            String insertQuery = "INSERT INTO students (id, name, course_name) VALUES (?, ?, ?)";
+            jdbcTemplate.update(insertQuery, student.getId(), student.getName(), student.getCourseName());
+        }
+
+        return Optional.of(student);
+    }
 
     /**
      * Retrieves a paginated list of students.
