@@ -19,11 +19,20 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final ResponsibleRepository responsibleRepository;
 
+    /**
+     * Constructor for UserService.
+     *
+     * @param studentRepository       Repository for managing Student entities.
+     * @param responsibleRepository   Repository for managing Responsible entities.
+     */
     @Autowired
-    private ResponsibleRepository responsibleRepository;
+    public UserService(StudentRepository studentRepository, ResponsibleRepository responsibleRepository) {
+        this.studentRepository = studentRepository;
+        this.responsibleRepository = responsibleRepository;
+    }
 
     /**
      * Retrieves a paginated list of students.
